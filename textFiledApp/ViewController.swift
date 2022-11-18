@@ -16,6 +16,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         textField.delegate = self // self는 ViewController를 의미한다.
         setup()
+        
+        // 텍스트 필드 범위 밖을 터치했을때 키보드가 내려가는 기능.
+        // 검색어 How to set the keyboard to go down when you touch the screen in swift
+        // https://stackoverflow.com/questions/24126678/close-ios-keyboard-by-touching-anywhere-using-swift
+        // swift5에서 사용하는 기능 (viewDidLoad에 추가한다)
+        let tapGesture = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
+        view.addGestureRecognizer(tapGesture)
     }
     
     
@@ -27,6 +34,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         textField.borderStyle = .roundedRect // 테두리 모양 설정.
         textField.clearButtonMode = .always  // 텍스트 필드에 클리어 버튼 만들기
         textField.returnKeyType = .go
+        
+        textField.becomeFirstResponder()
         
     }
     
@@ -48,6 +57,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 //        return true
 //    }
     
+
     // 텍스트필드 글자 내용이 입력 되거나 지워질때마다 읽어 오기.
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
@@ -56,25 +66,27 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let newString = currentString.replacingCharacters(in: range, with: string)
         
         return newString.count <= maxLength
+    }
         //        위 코드는 스오플에서 복붙한 코드
         
-        //        if Int(string) != nil {
-        //            return false
-        //        } else {
-        //            // 10글자 이상 입력되는 것을 막는 코드
-        //            guard let text = textField.text else { return true }
-        //            let newLength = text.count + string.count - range.lenght
-        //            return newLenght <= 10
-        //        }
+        
+//                if Int(string) != nil {
+//                    return false
+//                } else {
+//                    // 10글자 이상 입력되는 것을 막는 코드
+//                    guard let text = textField.text else { return true }
+//                    let newLength = text.count + string.count - range.lenght
+//                    return newLenght <= 10
+//                }
         
         //        // 또 다른 코드
-        //        if (textField.text?.count)! + string.count > 10 {
-        //            return false
-        //        } else P
-        //            return true
-        //    }
+//                if (textField.text?.count)! + string.count > 10 {
+//                    return false
+//                } else P
+//                    return true
+//            }
         //        이것으로 구현하는 방식에는 정답이 없다!
-    }
+    
         
         // 텍스트필드의 엔터키가 눌러지면 다음 동작을 허락할 것인지 말것인지.
 //        func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -99,6 +111,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         
     @IBAction func doneButtonTapped(_ sender: UIButton) {
+        
+        // 1. done 버튼을 눌렀을때 키보드가 내려가게 하는 기능 구현.
+        // textField.becomeFirstResponder()의 반대 기능임.
         textField.resignFirstResponder()
     }
     
